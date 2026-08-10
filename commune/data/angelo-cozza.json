@@ -4,7 +4,8 @@
   "org": "Service de la sécurité publique",
   "phone": "021 651 91 70",
   "email": "securite.publique@lemontsurlausanne.ch",
-  "website": "",
+  "website": "https://www.lemontsurlausanne.ch",
+  "websiteLabel": "lemontsurlausanne.ch",
   "address": "Route de Lausanne 16, 1052 Le Mont-sur-Lausanne",
   "logo": "Logo-SSPU.png"
 }
