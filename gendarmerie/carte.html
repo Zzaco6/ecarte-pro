@@ -63,7 +63,7 @@ async function main(){
             ${c.org ? `<p class="role">${esc(c.org)}</p>` : ''}
             ${c.unit ? `<p class="role">${esc(c.unit)}</p>` : ''}
           </div>
-          ${c.logo ? `<img class="logo" src="../images/${esc(c.logo)}" alt="Logo">` : ''}
+          ${c.logo ? `<img class="logo" src="image/${esc(c.logo)}" alt="Logo">` : ''}
         </div>
         <div class="rows">
           ${c.phone ? `<div class="row"><div class="label">Tél.</div><div class="val"><a href="tel:${esc(c.phone)}">${esc(c.phone)}</a></div></div>` : ''}
