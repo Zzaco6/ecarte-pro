@@ -58,7 +58,7 @@ async function main(){
             <h1>${esc(c.name)}</h1>
             <p class="role">${esc([c.jobTitle, c.org].filter(Boolean).join(' — '))}</p>
           </div>
-          ${c.logo ? `<img class="logo" src="../images/${esc(c.logo)}" alt="Logo">` : ''}
+          ${c.logo ? `<img class="logo" src="image/${esc(c.logo)}" alt="Logo">` : ''}
         </div>
         ${c.phone ? `<div class="row"><div class="label">Tél.</div><div class="val"><a href="tel:${esc(c.phone)}">${esc(c.phone)}</a></div></div>` : ''}
         ${c.email ? `<div class="row"><div class="label">Email</div><div class="val"><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></div></div>` : ''}
