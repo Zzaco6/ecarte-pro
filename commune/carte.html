@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carte de visite — Commune</title>
+<style>
+  :root{--ink:#1A1A1A;--red:#DA291C;--paper:#F5F5F3;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--paper);color:var(--ink);display:flex;min-height:100vh;align-items:center;justify-content:center;padding:24px;}
+  .card{width:100%;max-width:380px;background:#fff;border:1px solid #e2e2e0;border-radius:2px;overflow:hidden;}
+  .band{height:6px;background:var(--red);}
+  .body{padding:32px 28px;}
+  .header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:6px;}
+  .header-text{flex:1;min-width:0;}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);font-weight:700;margin:0 0 6px;}
+  h1{font-size:22px;margin:0 0 2px;letter-spacing:-.01em;}
+  .role{font-size:14px;color:#555;margin:0 0 24px;}
+  .row{display:flex;gap:10px;font-size:14px;padding:9px 0;border-top:1px solid #eee;}
+  .row:first-of-type{border-top:none;}
+  .label{width:76px;flex:0 0 auto;color:#8a8a8a;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding-top:2px;}
+  .val a{color:var(--ink);text-decoration:none;}
+  .val a:hover{color:var(--red);}
+  .cta{display:block;text-align:center;margin-top:26px;background:var(--ink);color:#fff;padding:13px;border-radius:2px;text-decoration:none;font-size:14px;letter-spacing:.02em;border:0;width:100%;cursor:pointer;}
+  .cta:active{background:var(--red);}
+  .empty{max-width:380px;text-align:center;color:#8a8a8a;font-size:14px;}
+  .logo{max-height:100px;max-width:130px;flex:0 0 auto;object-fit:contain;}
+</style>
+</head>
+<body>
+  <div id="root" class="empty">Chargement…</div>
+<script>
+async function main(){
+  const root = document.getElementById('root');
+  const id = new URLSearchParams(window.location.search).get('id');
+  if(!id){
+    root.textContent = "Aucune carte spécifiée. Ajoutez ?id=identifiant à l'URL.";
+    return;
+  }
+  let c;
+  try{
+    const res = await fetch('data/' + id + '.json', {cache:'no-store'});
+    if(!res.ok) throw new Error('not found');
+    c = await res.json();
+  }catch(e){
+    root.textContent = "Carte introuvable pour l'identifiant \"" + id + "\".";
+    return;
+  }
+  const esc = s => (s||'').replace(/</g,'&lt;');
+  root.className = '';
+  root.innerHTML = `
+    <div class="card">
+      <div class="band"></div>
+      <div class="body">
+        <div class="header">
+          <div class="header-text">
+            <p class="eyebrow">Contact</p>
+            <h1>${esc(c.name)}</h1>
+            <p class="role">${esc([c.jobTitle, c.org].filter(Boolean).join(' — '))}</p>
+          </div>
+          ${c.logo ? `<img class="logo" src="../images/${esc(c.logo)}" alt="Logo">` : ''}
+        </div>
+        ${c.phone ? `<div class="row"><div class="label">Tél.</div><div class="val"><a href="tel:${esc(c.phone)}">${esc(c.phone)}</a></div></div>` : ''}
+        ${c.email ? `<div class="row"><div class="label">Email</div><div class="val"><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></div></div>` : ''}
+        ${c.website ? `<div class="row"><div class="label">Web</div><div class="val"><a href="${esc(c.website)}">${esc(c.website)}</a></div></div>` : ''}
+        ${c.address ? `<div class="row"><div class="label">Adresse</div><div class="val">${esc(c.address)}</div></div>` : ''}
+        <button class="cta" id="save">Enregistrer le contact</button>
+      </div>
+    </div>`;
+  document.getElementById('save').addEventListener('click', function(){
+    const lines = ["BEGIN:VCARD","VERSION:3.0",
+      "N:"+(c.name||"").split(" ").reverse().join(";")+";;;",
+      "FN:"+(c.name||""),
+      c.org?("ORG:"+c.org):"",
+      c.jobTitle?("TITLE:"+c.jobTitle):"",
+      c.phone?("TEL;TYPE=CELL:"+c.phone):"",
+      c.email?("EMAIL:"+c.email):"",
+      c.website?("URL:"+c.website):"",
+      c.address?("ADR;TYPE=WORK:;;"+c.address+";;;;"):"",
+      "END:VCARD"].filter(Boolean).join("\n");
+    const blob = new Blob([lines], {type:'text/vcard'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = (c.name||'contact') + '.vcf';
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+}
+main();
+</script>
+</body>
+</html>
