@@ -66,7 +66,8 @@ async function main(){
           ${c.logo ? `<img class="logo" src="image/${esc(c.logo)}" alt="Logo">` : ''}
         </div>
         <div class="rows">
-          ${c.phone ? `<div class="row"><div class="label">Tél.</div><div class="val"><a href="tel:${esc(c.phone)}">${esc(c.phone)}</a></div></div>` : ''}
+          ${c.phone ? `<div class="row"><div class="label">Bureau</div><div class="val"><a href="tel:${esc(c.phone)}">${esc(c.phone)}</a></div></div>` : ''}
+          ${c.phonePro ? `<div class="row"><div class="label">Mobile</div><div class="val"><a href="tel:${esc(c.phonePro)}">${esc(c.phonePro)}</a></div></div>` : ''}
           ${c.email ? `<div class="row"><div class="label">Email</div><div class="val"><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></div></div>` : ''}
           ${c.website ? `<div class="row"><div class="label">Site</div><div class="val"><a href="${esc(c.website)}" target="_blank" rel="noopener noreferrer">${esc(c.websiteLabel || c.website.replace(/^https?:\/\//,''))}</a></div></div>` : ''}
           ${c.address ? `<div class="row"><div class="label">Adresse</div><div class="val">${esc(c.address).replace(', ', '<br>')}</div></div>` : ''}
@@ -82,6 +83,7 @@ async function main(){
       c.org?("ORG:"+c.org):"",
       c.jobTitle?("TITLE:"+c.jobTitle):"",
       c.phone?("TEL;TYPE=CELL:"+c.phone):"",
+      c.phonePro?("TEL;TYPE=WORK:"+c.phonePro):"",
       c.email?("EMAIL:"+c.email):"",
       c.website?("URL:"+c.website):"",
       c.address?("ADR;TYPE=WORK:;;"+c.address+";;;;"):"",
